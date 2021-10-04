@@ -37,7 +37,6 @@ const App = () => {
       // valid to send the amount
 
       // making a transaction
-
       web3.eth.sendTransaction(
         {
           to: toWallet,
