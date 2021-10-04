@@ -28,7 +28,7 @@ export const requestForAccountAccess = async () => {
 
 export const getCurrentBalance = async (account) => {
   web3 = new Web3(window.ethereum);
-  return await web3.eth.getBalance(account);
+  return web3.utils.fromWei(await web3.eth.getBalance(account), "ether");
 };
 
 export const getWalletAccounts = async () => {
