@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import logo from "../../assets/svgs/switch-1.svg";
 import { Flex, Box, Image, Text, Stack, Avatar } from "@chakra-ui/react";
+import { getWalletAccounts } from "../../services/blockchain";
 const Header = () => {
+  const [accounts, setAccounts] = useState([]);
+
+  useEffect(() => {
+    async function perform() {
+      const acList = await getWalletAccounts();
+      setAccounts(acList);
+    }
+    perform();
+  }, []);
   return (
     <Flex pos="relative">
       <Box display="flex" flexDir="row" alignItems="center">
@@ -22,7 +32,7 @@ const Header = () => {
         <Flex direction="column" textAlign="right" mr="3">
           <Text fontSize="16px">Account 1</Text>
           <Text fontSize="10px" color="gray">
-            0xA0B81186881e2393F480eF7702940B5B3286fedB
+            {accounts[0]}
           </Text>
         </Flex>
         <Avatar

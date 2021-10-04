@@ -29,37 +29,6 @@ const AppTest = () => {
     }
   }, []);
 
-  const makeTransaction = async () => {
-    // check if you have valid balance
-    let currentBalance = await web3.eth.getBalance(walletAddress);
-
-    if (currentBalance >= sendingBalance) {
-      // valid to send the amount
-
-      // making a transaction
-      web3.eth.sendTransaction(
-        {
-          to: toWallet,
-          from: walletAddress,
-          value: web3.utils.toWei(sendingBalance.toString(), "ether"),
-        },
-        async (error, receipt) => {
-          if (error) {
-            alert(JSON.stringify(error));
-          } else {
-            const newBalance = await web3.eth.getBalance(walletAddress);
-            setWalletBalance(newBalance);
-            alert("Transaction successful");
-            setToWallet("");
-            setSendingBalance(0.0);
-          }
-        }
-      );
-    } else {
-      alert("You don't have enough balance to send");
-    }
-  };
-
   const requestForAccountAccess = async () => {
     try {
       await window.ethereum.enable();
