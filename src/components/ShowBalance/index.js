@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Text } from "@chakra-ui/react";
 import {
+  getBalanceOfToken,
   getCurrentBalance,
   getWalletAccounts,
 } from "../../services/blockchain";
@@ -9,6 +10,8 @@ const ShowBalance = () => {
   useEffect(async () => {
     let accounts = await getWalletAccounts();
     let balance = await getCurrentBalance(accounts[0]);
+    let tokenBalance = await getBalanceOfToken(accounts[0]);
+    console.log("balance:", tokenBalance);
     setCurrentBalance(balance);
   }, []);
   return (

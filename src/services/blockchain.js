@@ -1,5 +1,7 @@
 import Web3 from "web3";
-var web3;
+import abi from "../configs/abi.json";
+
+var web3 = new Web3(window.ethereum);
 
 export const initiateMetamask = async () => {
   // check if browser have the metamask installed
@@ -27,44 +29,81 @@ export const requestForAccountAccess = async () => {
 };
 
 export const getCurrentBalance = async (account) => {
-  web3 = new Web3(window.ethereum);
   return web3.utils.fromWei(await web3.eth.getBalance(account), "ether");
 };
 
 export const getWalletAccounts = async () => {
-  web3 = new Web3(window.ethereum);
   return await web3.eth.getAccounts();
 };
 
+export const getBalanceOfToken = async (address) => {
+  var contract = new web3.eth.Contract(
+    abi,
+    "0xad6d458402f60fd3bd25163575031acdce07538d"
+  );
+  console.log(contract);
+  let balance = await contract.methods.balanceOf(address).call();
+  return web3.utils.fromWei(balance, "ether");
+};
+
 export const makeTransaction = async (sendingBalance, fromAc, toAc, token) => {
-  web3 = new Web3(window.ethereum);
-  // check if you have valid balance
-  let currentBalance = await web3.eth.getBalance(fromAc);
+  if (token === "ether") {
+    // check if you have valid balance
+    let currentBalance = await web3.eth.getBalance(fromAc);
 
-  if (currentBalance >= sendingBalance) {
-    // valid to send the amount
+    if (currentBalance >= sendingBalance) {
+      // valid to send the amount
 
-    // making a transaction
-    web3.eth.sendTransaction(
-      {
-        to: toAc,
-        from: fromAc,
-        value: web3.utils.toWei(sendingBalance.toString(), token.toStrin()),
-      },
-      async (error, receipt) => {
-        if (error) {
-          alert(JSON.stringify(error));
-        } else {
-          const newBalance = await web3.eth.getBalance(fromAc);
-          return {
-            message: "Transaction successful",
-            newBalance: newBalance,
-            receipt: receipt,
-          };
+      // making a transaction
+      web3.eth.sendTransaction(
+        {
+          to: toAc,
+          from: fromAc,
+          value: web3.utils.toWei(sendingBalance.toString(), token.toStrin()),
+        },
+        async (error, receipt) => {
+          if (error) {
+            alert(JSON.stringify(error));
+          } else {
+            const newBalance = await web3.eth.getBalance(fromAc);
+            return {
+              message: "Transaction successful",
+              newBalance: newBalance,
+              receipt: receipt,
+            };
+          }
         }
-      }
-    );
+      );
+    } else {
+      alert("You don't have enough balance to send");
+    }
   } else {
-    alert("You don't have enough balance to send");
+    let tokenBalance = getBalanceOfToken(fromAc);
+
+    var contract = new web3.eth.Contract(
+      abi,
+      "0xad6d458402f60fd3bd25163575031acdce07538d"
+    );
+
+    if (tokenBalance >= sendingBalance) {
+      // tx to the blockchain
+      let result = await contract.methods
+        .transfer(toAc, sendingBalance.toString())
+        .send({ from: fromAc });
+
+      var interval = setInterval(function () {
+        web3.eth.getTransactionReceipt(
+          result.transactionHash,
+          function (err, receipt) {
+            if (err) return console.error("error getting receipt", err);
+            console.log("tx receipt is:");
+            console.dir(receipt);
+            clearInterval(interval);
+          }
+        );
+      }, 1000);
+    } else {
+      alert("Token balance is not enough");
+    }
   }
 };
