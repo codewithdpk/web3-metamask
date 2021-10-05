@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import Header from "../../components/header";
 import ShowBalance from "../../components/ShowBalance";
@@ -8,11 +8,17 @@ const Homepage = () => {
   return (
     <Box>
       <Flex mt="20">
-        <Box w="45%" mr="2.5%">
+        <Box w="50%" mr="2.5%">
+          <Text fontSize="large" fontWeight="bold" mb="4">
+            Available Balance
+          </Text>
           <ShowBalance />
         </Box>
 
         <Box w="45%" ml="2.5%">
+          <Text fontSize="large" fontWeight="bold" mb="4">
+            Transfer
+          </Text>
           <Transfer />
         </Box>
       </Flex>
