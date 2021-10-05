@@ -6,13 +6,15 @@ import {
   getWalletAccounts,
 } from "../../services/blockchain";
 const ShowBalance = () => {
-  const [currentBalance, setCurrentBalance] = useState(0.0);
+  const [currentBalanceEth, setCurrentBalanceEth] = useState(0.0);
+  const [currentBalanceDai, setCurrentBalanceDai] = useState(0.0);
+
   useEffect(async () => {
     let accounts = await getWalletAccounts();
     let balance = await getCurrentBalance(accounts[0]);
     let tokenBalance = await getBalanceOfToken(accounts[0]);
-    console.log("balance:", tokenBalance);
-    setCurrentBalance(balance);
+    setCurrentBalanceDai(tokenBalance);
+    setCurrentBalanceEth(balance);
   }, []);
   return (
     <Box
@@ -33,11 +35,26 @@ const ShowBalance = () => {
         fontSize="10px"
         textTransform="uppercase"
       >
-        available balance
+        ethereum
       </Box>
 
-      <Text fontSize="xx-large" fontWeight="extrabold">
-        {currentBalance} ETH
+      <Text fontSize="large" fontWeight="extrabold" mt="2">
+        {currentBalanceEth} ETH
+      </Text>
+
+      <Box
+        color="gray.500"
+        fontWeight="semibold"
+        letterSpacing="wide"
+        fontSize="10px"
+        textTransform="uppercase"
+        mt="4"
+      >
+        dai
+      </Box>
+
+      <Text fontSize="large" fontWeight="extrabold" mt="2">
+        {currentBalanceDai} DAI
       </Text>
     </Box>
   );

@@ -8,17 +8,27 @@ const TransferPage = () => {
   ];
   const [sendingBalance, setSendingBalance] = useState(0.0);
   const [toWallet, setToWallet] = useState("");
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(null);
   const [fromWallet, setFromWallet] = useState("");
 
   useEffect(async () => {
     let accounts = await getWalletAccounts();
     setFromWallet(accounts[0]);
   }, []);
-  const hitTransaction = () => {
-    makeTransaction(sendingBalance, fromWallet, toWallet, token);
+  const hitTransaction = async () => {
+    let result = await makeTransaction(
+      sendingBalance,
+      fromWallet,
+      toWallet,
+      token
+    );
+    setSendingBalance(0.0);
+    setToWallet("");
+    setToken(null);
+    alert(result);
   };
 
+  //37.773786975385925425
   return (
     <Box
       display="flex"
@@ -31,10 +41,12 @@ const TransferPage = () => {
         <Input
           placeholder="Amount"
           type="number"
+          value={sendingBalance}
           onChange={(e) => setSendingBalance(e.target.value)}
         />
         <Input
           placeholder="Wallet Address"
+          value={toWallet}
           onChange={(e) => setToWallet(e.target.value)}
         />
         <Select
@@ -42,6 +54,7 @@ const TransferPage = () => {
           borderColor="#5EBEFF"
           color="#b1aec3"
           placeholder="Select Token"
+          value={token}
           onChange={(e) => setToken(e.target.value)}
         >
           {optionsCurrency.map(({ value, label }) => {

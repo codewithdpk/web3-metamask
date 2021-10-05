@@ -17,16 +17,11 @@ const Transfer = () => {
       width="100%"
       textAlign="center"
       cursor="pointer"
-      height="97px"
+      height="40px"
       onClick={() => history.push("/transfer")}
     >
-      <Text
-        fontSize="xx-large"
-        fontFamily="Inter"
-        fontWeight="bold"
-        color="white"
-      >
-        Transfer
+      <Text fontSize="small" fontFamily="Inter" color="white">
+        Transfer Crypto
       </Text>
     </Box>
   );
