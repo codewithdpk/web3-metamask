@@ -3,6 +3,7 @@ import abi from "../configs/abi.json";
 
 var web3 = new Web3(window.ethereum);
 
+// for review
 export const initiateMetamask = async () => {
   // check if browser have the metamask installed
   if (typeof window.ethereum !== "undefined") {
