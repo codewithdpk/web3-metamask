@@ -2,6 +2,7 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import Header from "../../components/header";
 import ShowBalance from "../../components/ShowBalance";
+import SwapButton from "../../components/swap";
 import Transfer from "../../components/transfer";
 
 const Homepage = () => {
@@ -20,6 +21,7 @@ const Homepage = () => {
             Transfer
           </Text>
           <Transfer />
+          <SwapButton />
         </Box>
       </Flex>
     </Box>
