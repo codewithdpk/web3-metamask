@@ -2,11 +2,12 @@ import Web3 from "web3";
 import abi from "../configs/abi.json";
 import exchange_abi from "../configs/exchange_abi.json";
 import { ethers } from "ethers";
-import bigInt from "big-integer";
+import TOKENS_DATA from "../tokens.json";
 
 import {
   CONTRACT_ADDRESS,
   ROUTER_ADDRESS,
+  ROUTER_CONTRACT,
   TOKEN_ADDRESS,
   WETH_ADDRESS,
 } from "../configs/configs";
@@ -147,12 +148,7 @@ export const swapToken = async (walletAddress, amount) => {
 
   const DAI = new Token(ChainId.ROPSTEN, daiContractAddress, 18);
 
-  // note that you may want/need to handle this async code differently,
-  // for example if top-level await is not an option
-
   const pair = await Fetcher.fetchPairData(DAI, WETH[DAI.chainId]);
-
-  console.log(pair);
 
   const route = new Route([pair], WETH[DAI.chainId]);
 
@@ -166,11 +162,7 @@ export const swapToken = async (walletAddress, amount) => {
 
   console.log(trade);
 
-  const router = new ethers.Contract(
-    "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
-    exchange_abi,
-    signer
-  );
+  const router = new ethers.Contract(ROUTER_CONTRACT, exchange_abi, signer);
 
   const path = [WETH[DAI.chainId].address, DAI.address];
 
@@ -185,14 +177,40 @@ export const swapToken = async (walletAddress, amount) => {
   const to = ""; // should be a checksummed recipient address
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from the current Unix time
   const value = trade.inputAmount.raw.toString(); // // needs to be converted to e.g. hex
-  let tx = await router.swapExactETHForTokens(
-    amountOutMin,
-    path,
-    walletAddress,
-    deadline,
-    { value }
-  );
+  let tx = await router
+    .swapExactETHForTokens(amountOutMin, path, walletAddress, deadline)
+    .send({ from: walletAddress, value });
 
   await tx.wait();
   console.log(tx);
+};
+
+export const getEstimatedValue = async (amount, token) => {
+  // parsing the actual amount into wei units
+  let buyingAmount = await ethers.utils.parseEther(amount); // use etherjs
+  // getting token contract address from token data json
+  const tokenAddress = TOKENS_DATA[token].address;
+
+  console.log(tokenAddress);
+
+  // creating token object of ether
+  const EXG_TKN = new Token(
+    ChainId.ROPSTEN,
+    tokenAddress,
+    TOKENS_DATA[token].decimals
+  );
+
+  const pair = await Fetcher.fetchPairData(EXG_TKN, WETH[EXG_TKN.chainId]);
+
+  const route = new Route([pair], WETH[EXG_TKN.chainId]);
+
+  const amountIn = buyingAmount.toString(); // 1 WETH
+
+  const trade = new Trade(
+    route,
+    new TokenAmount(WETH[EXG_TKN.chainId], amountIn),
+    TradeType.EXACT_INPUT
+  );
+
+  return await trade.outputAmount.toSignificant(TOKENS_DATA[token].decimals);
 };
