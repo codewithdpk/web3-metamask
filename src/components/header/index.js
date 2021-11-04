@@ -7,7 +7,7 @@ import { useHistory } from "react-router";
 
 const Header = () => {
   const [accounts, setAccounts] = useState([]);
-
+  
   const history = useHistory();
 
   useEffect(() => {
@@ -18,13 +18,27 @@ const Header = () => {
     perform();
   }, []);
   return (
-    <Flex pos="relative">
+    <Flex pos="relative" alignItems="center">
       <Box display="flex" flexDir="row" alignItems="center" cursor="pointer" onClick = {()=>history.push("/")}>
         <Image src={logo} h="20px" w="20px" />
         <Text ml="3" fontSize="24px" fontWeight="extrabold">
           Dq Transfer
         </Text>
-      </Box>
+        </Box>
+
+        <Stack direction="row" spacing="6" ml="10">
+        <Text fontSize="16px" fontWeight="normal" cursor="pointer" onClick = {()=>history.push("/exchange")}>
+          Exchange
+        </Text>
+        <Text fontSize="16px" fontWeight="normal" cursor="pointer" onClick = {()=>history.push("/transactions")}>
+          Transactions
+        </Text>
+        <Text fontSize="16px" fontWeight="normal" cursor="pointer" onClick = {()=>history.push("/accounts")}>
+          Accounts
+        </Text>
+          
+          </Stack>
+      
 
       <Box
         display="flex"
