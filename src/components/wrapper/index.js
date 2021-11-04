@@ -4,7 +4,7 @@ import { ChakraProvider, Container } from "@chakra-ui/react";
 const Wrapper = ({ children }) => {
   return (
     <ChakraProvider>
-      <Container maxW="container.sm" pt="60px">
+      <Container maxW="container.lg" pt="30px">
         {children}
       </Container>
     </ChakraProvider>
