@@ -3,42 +3,37 @@ import { Table, Thead, Tbody, Tr, Th, Td, Text } from "@chakra-ui/react";
 import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { useTable, useSortBy } from "react-table";
 
-export const TransactionTable = () => {
-  const data = React.useMemo(
-    () => [
-      {
-        fromUnit: "inches",
-        toUnit: "millimetres (mm)",
-        factor: 25.4,
-      },
-      {
-        fromUnit: "feet",
-        toUnit: "centimetres (cm)",
-        factor: 30.48,
-      },
-      {
-        fromUnit: "yards",
-        toUnit: "metres (m)",
-        factor: 0.91444,
-      },
-    ],
-    []
-  );
-
+export const TransactionTable = ({ data }) => {
   const columns = React.useMemo(
     () => [
       {
-        Header: "To convert",
-        accessor: "fromUnit",
+        Header: "Txn Hash",
+        accessor: "hash",
+        color: "red",
       },
       {
-        Header: "Into",
-        accessor: "toUnit",
+        Header: "Block",
+        accessor: "blockNumber",
       },
       {
-        Header: "Multiply by",
-        accessor: "factor",
-        isNumeric: true,
+        Header: "Gas",
+        accessor: "gasUsed",
+      },
+      {
+        Header: "From",
+        accessor: "from",
+      },
+      {
+        Header: "To",
+        accessor: "to",
+      },
+      {
+        Header: "Value",
+        accessor: "value",
+      },
+      {
+        Header: "Time",
+        accessor: "timeStamp",
       },
     ],
     []
@@ -79,9 +74,7 @@ export const TransactionTable = () => {
             <Tr {...row.getRowProps()}>
               {row.cells.map((cell) => (
                 <Td {...cell.getCellProps()} isNumeric={cell.column.isNumeric}>
-                  <Text fontSize="16px" fontWeight="normal">
-                    {cell.render("Cell")}
-                  </Text>
+                  {cell.render("Cell")}
                 </Td>
               ))}
             </Tr>
