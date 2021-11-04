@@ -7,9 +7,11 @@ import { initiateMetamask } from "../../services/blockchain";
 import Header from "../header";
 
 const Routes = () => {
+
   useEffect(async () => {
     await initiateMetamask();
   }, []);
+  
   return (
     <Router>
       <Header />

@@ -164,25 +164,27 @@ export const swapToken = async (walletAddress, amount) => {
 
   const router = new ethers.Contract(ROUTER_CONTRACT, exchange_abi, signer);
 
+  console.log("Router=>", router);
+
   const path = [WETH[DAI.chainId].address, DAI.address];
 
   const slippageTolerance = new Percent("50", "10000"); // 50 bips, or 0.50%
 
   const amountOutMin = trade.minimumAmountOut(slippageTolerance).raw.toString(); // needs to be converted to e.g. hex
 
-  console.log(amountOutMin);
-
-  console.log(path);
-
   const to = ""; // should be a checksummed recipient address
   const deadline = Math.floor(Date.now() / 1000) + 60 * 20; // 20 minutes from the current Unix time
   const value = trade.inputAmount.raw.toString(); // // needs to be converted to e.g. hex
-  let tx = await router
-    .swapExactETHForTokens(amountOutMin, path, walletAddress, deadline)
-    .send({ from: walletAddress, value });
+  let tx = await router.swapExactETHForTokens(
+    amountOutMin,
+    path,
+    walletAddress,
+    deadline,
+    { value }
+  );
 
   await tx.wait();
-  console.log(tx);
+  console.log(tx)
 };
 
 export const getEstimatedValue = async (amount, token) => {

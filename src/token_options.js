@@ -99,7 +99,7 @@ export const TOKENS = {
     website: "https://wbtc.network",
   },
   DAI: {
-    address: "0x6b175474e89094c44da98b954eedeac495271d0f",
+    address: "0xaD6D458402F60fD3Bd25163575031ACDce07538D",
     decimals: 18,
     ens_address: "",
     logo: {

@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import logo from "../../assets/svgs/switch-1.svg";
 import { Flex, Box, Image, Text, Stack, Avatar } from "@chakra-ui/react";
 import { getWalletAccounts } from "../../services/blockchain";
+import { useHistory } from "react-router";
+
+
 const Header = () => {
   const [accounts, setAccounts] = useState([]);
+
+  const history = useHistory();
 
   useEffect(() => {
     async function perform() {
@@ -14,7 +19,7 @@ const Header = () => {
   }, []);
   return (
     <Flex pos="relative">
-      <Box display="flex" flexDir="row" alignItems="center">
+      <Box display="flex" flexDir="row" alignItems="center" cursor="pointer" onClick = {()=>history.push("/")}>
         <Image src={logo} h="20px" w="20px" />
         <Text ml="3" fontSize="24px" fontWeight="extrabold">
           Dq Transfer
