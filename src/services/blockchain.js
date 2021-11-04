@@ -184,7 +184,7 @@ export const swapToken = async (walletAddress, amount) => {
   );
 
   await tx.wait();
-  console.log(tx)
+  console.log(tx);
 };
 
 export const getEstimatedValue = async (amount, token) => {
