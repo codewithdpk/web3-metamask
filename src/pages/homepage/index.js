@@ -10,14 +10,14 @@ const Homepage = () => {
     <Box>
       <Flex mt="20">
         <Box w="50%" mr="2.5%">
-          <Text fontSize="large" fontWeight="bold" mb="4">
+          <Text fontSize="xl" fontWeight="bold" mb="4">
             Available Balance
           </Text>
           <ShowBalance />
         </Box>
 
         <Box w="45%" ml="2.5%">
-          <Text fontSize="large" fontWeight="bold" mb="4">
+          <Text fontSize="xl" fontWeight="bold" mb="4">
             Transfer
           </Text>
           <Transfer />

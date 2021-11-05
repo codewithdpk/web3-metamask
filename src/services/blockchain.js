@@ -216,3 +216,7 @@ export const getEstimatedValue = async (amount, token) => {
 
   return await trade.outputAmount.toSignificant(TOKENS_DATA[token].decimals);
 };
+
+export const fromWei = (value) => {
+  return web3.utils.fromWei(value.toString(), "ether");
+};

@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/layout";
+import { Box, Text } from "@chakra-ui/layout";
 import React, { useEffect, useState } from "react";
 import { TransactionTable } from "../../components/transactions";
 import { getWalletAccounts } from "../../services/blockchain";
@@ -12,9 +12,9 @@ export const TransactionsPage = () => {
     let rows = logs.result.map((row) => {
       return {
         ...row,
-        hash: `${row.hash.slice(0, 8)}...`,
-        from: `${row.from.slice(0, 8)}...`,
-        to: `${row.to.slice(0, 8)}...`,
+        shortHash: `${row.hash.slice(0, 8)}...`,
+        fromShort: `${row.from.slice(0, 8)}...`,
+        toShort: `${row.to.slice(0, 8)}...`,
       };
     });
 
@@ -24,6 +24,11 @@ export const TransactionsPage = () => {
 
   return (
     <Box>
+      <Box mt="80px">
+        <Text fontSize="xl" fontWeight="bold">
+          My Transactions
+        </Text>
+      </Box>
       <TransactionTable data={accountLogs} />
     </Box>
   );
