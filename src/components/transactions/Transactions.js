@@ -1,6 +1,7 @@
 import React from "react";
 import { Box, Text } from "@chakra-ui/layout";
 import { useTable, useSortBy } from "react-table";
+import { fromWei } from "../../services/blockchain";
 
 export const TransactionTable = ({ data }) => {
   const columns = [
@@ -34,8 +35,13 @@ export const TransactionTable = ({ data }) => {
     },
   ];
 
+  const viewTheTxn = (hashWithPrefix) => {
+    console.log(hashWithPrefix);
+    window.open(`https://ropsten.etherscan.io/${hashWithPrefix}`, "_blank");
+  };
+
   return (
-    <Box pt="60px">
+    <Box pt="30px">
       <table width="100%">
         <tr>
           {columns.map((column) => (
@@ -56,7 +62,12 @@ export const TransactionTable = ({ data }) => {
             <td
               style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
             >
-              <Text fontSize="medium">{row.hash}</Text>
+              <Text
+                fontSize="medium"
+                onClick={() => viewTheTxn(`tx/${row.hash}`)}
+              >
+                {row.shortHash}
+              </Text>
             </td>
             <td style={{ padding: "12px 0" }}>
               <Text fontSize="medium">{row.blockNumber}</Text>
@@ -67,18 +78,30 @@ export const TransactionTable = ({ data }) => {
             <td
               style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
             >
-              <Text fontSize="medium">{row.from}</Text>
+              <Text
+                fontSize="medium"
+                onClick={() => viewTheTxn(`address/${row.from}`)}
+              >
+                {row.fromShort}
+              </Text>
             </td>
             <td
               style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
             >
-              <Text fontSize="medium">{row.to}</Text>
+              <Text
+                fontSize="medium"
+                onClick={() => viewTheTxn(`address/${row.to}`)}
+              >
+                {row.toShort}
+              </Text>
             </td>
             <td style={{ padding: "12px 0" }}>
-              <Text fontSize="medium">{row.value}</Text>
+              <Text fontSize="medium">{fromWei(row.value)} ETH</Text>
             </td>
             <td style={{ padding: "12px 0" }}>
-              <Text fontSize="medium">{row.timeStamp}</Text>
+              <Text fontSize="medium">
+                {new Date(row.timeStamp * 1000).toUTCString()}
+              </Text>
             </td>
           </tr>
         ))}
