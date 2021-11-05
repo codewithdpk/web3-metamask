@@ -1,86 +1,88 @@
 import React from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, Text } from "@chakra-ui/react";
-import { TriangleDownIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { Box, Text } from "@chakra-ui/layout";
 import { useTable, useSortBy } from "react-table";
 
 export const TransactionTable = ({ data }) => {
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: "Txn Hash",
-        accessor: "hash",
-        color: "red",
-      },
-      {
-        Header: "Block",
-        accessor: "blockNumber",
-      },
-      {
-        Header: "Gas",
-        accessor: "gasUsed",
-      },
-      {
-        Header: "From",
-        accessor: "from",
-      },
-      {
-        Header: "To",
-        accessor: "to",
-      },
-      {
-        Header: "Value",
-        accessor: "value",
-      },
-      {
-        Header: "Time",
-        accessor: "timeStamp",
-      },
-    ],
-    []
-  );
-
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable({ columns, data }, useSortBy);
+  const columns = [
+    {
+      Header: "Txn Hash",
+      accessor: "hash",
+    },
+    {
+      Header: "Block",
+      accessor: "blockNumber",
+    },
+    {
+      Header: "Gas",
+      accessor: "gasUsed",
+    },
+    {
+      Header: "From",
+      accessor: "from",
+    },
+    {
+      Header: "To",
+      accessor: "to",
+    },
+    {
+      Header: "Value",
+      accessor: "value",
+    },
+    {
+      Header: "Time",
+      accessor: "timeStamp",
+    },
+  ];
 
   return (
-    <Table {...getTableProps()} marginY="60px">
-      <Thead>
-        {headerGroups.map((headerGroup) => (
-          <Tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <Th
-                {...column.getHeaderProps(column.getSortByToggleProps())}
-                isNumeric={column.isNumeric}
+    <Box pt="60px">
+      <table width="100%">
+        <tr>
+          {columns.map((column) => (
+            <th style={{ textAlign: "start" }}>
+              <Text
+                textTransform="uppercase"
+                fontSize="small"
+                fontWeight="bold"
+                color="gray.600"
               >
-                {column.render("Header")}
-                <Text pl="4">
-                  {column.isSorted ? (
-                    column.isSortedDesc ? (
-                      <TriangleDownIcon aria-label="sorted descending" />
-                    ) : (
-                      <TriangleUpIcon aria-label="sorted ascending" />
-                    )
-                  ) : null}
-                </Text>
-              </Th>
-            ))}
-          </Tr>
+                {column.Header}
+              </Text>
+            </th>
+          ))}
+        </tr>
+        {data.map((row) => (
+          <tr>
+            <td
+              style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
+            >
+              <Text fontSize="medium">{row.hash}</Text>
+            </td>
+            <td style={{ padding: "12px 0" }}>
+              <Text fontSize="medium">{row.blockNumber}</Text>
+            </td>
+            <td style={{ padding: "12px 0" }}>
+              <Text fontSize="medium">{row.gasUsed}</Text>
+            </td>
+            <td
+              style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
+            >
+              <Text fontSize="medium">{row.from}</Text>
+            </td>
+            <td
+              style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
+            >
+              <Text fontSize="medium">{row.to}</Text>
+            </td>
+            <td style={{ padding: "12px 0" }}>
+              <Text fontSize="medium">{row.value}</Text>
+            </td>
+            <td style={{ padding: "12px 0" }}>
+              <Text fontSize="medium">{row.timeStamp}</Text>
+            </td>
+          </tr>
         ))}
-      </Thead>
-      <Tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <Tr {...row.getRowProps()}>
-              {row.cells.map((cell) => (
-                <Td {...cell.getCellProps()} isNumeric={cell.column.isNumeric}>
-                  {cell.render("Cell")}
-                </Td>
-              ))}
-            </Tr>
-          );
-        })}
-      </Tbody>
-    </Table>
+      </table>
+    </Box>
   );
 };
