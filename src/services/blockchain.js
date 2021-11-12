@@ -217,6 +217,39 @@ export const getEstimatedValue = async (amount, token) => {
   return await trade.outputAmount.toSignificant(TOKENS_DATA[token].decimals);
 };
 
+// to convert gas unit into ether
 export const fromWei = (value) => {
-  return web3.utils.fromWei(value.toString(), "ether");
+  if (value) {
+    return web3.utils.fromWei(value.toString(), "ether");
+  } else {
+    return "";
+  }
+};
+
+export const getTokenValue = async (tokenAddr, token, amount) => {
+  // parsing the actual amount into wei units
+  let buyingAmount = await ethers.utils.parseEther(amount); // use etherjs
+  // getting token contract address from token data json
+  const tokenAddress = TOKENS_DATA[token].address;
+
+  // creating token object of ether
+  const EXG_TKN = new Token(
+    ChainId.ROPSTEN,
+    tokenAddress,
+    TOKENS_DATA[token].decimals
+  );
+
+  const pair = await Fetcher.fetchPairData(EXG_TKN, WETH[EXG_TKN.chainId]);
+
+  const route = new Route([pair], WETH[EXG_TKN.chainId]);
+
+  const amountIn = buyingAmount.toString(); // 1 WETH
+
+  const trade = new Trade(
+    route,
+    new TokenAmount(WETH[EXG_TKN.chainId], amountIn),
+    TradeType.EXACT_INPUT
+  );
+
+  return await trade.outputAmount.toSignificant(TOKENS_DATA[token].decimals);
 };
