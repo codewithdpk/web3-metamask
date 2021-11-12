@@ -1,7 +1,9 @@
 import React from "react";
 import { Box, Text } from "@chakra-ui/layout";
+import { Badge, Tooltip } from "@chakra-ui/react";
 import { useTable, useSortBy } from "react-table";
 import { fromWei } from "../../services/blockchain";
+import { getDateStringServ } from "../../utils";
 
 export const TransactionTable = ({ data }) => {
   const columns = [
@@ -15,7 +17,7 @@ export const TransactionTable = ({ data }) => {
     },
     {
       Header: "Gas",
-      accessor: "gasUsed",
+      accessor: "gasPrice",
     },
     {
       Header: "From",
@@ -57,54 +59,75 @@ export const TransactionTable = ({ data }) => {
             </th>
           ))}
         </tr>
-        {data.map((row) => (
-          <tr>
-            <td
-              style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
-            >
-              <Text
-                fontSize="medium"
-                onClick={() => viewTheTxn(`tx/${row.hash}`)}
+        {data
+          .slice(0)
+          .reverse()
+          .map((row) => (
+            <tr>
+              <td
+                style={{
+                  padding: "12px 20px 12px 0",
+                  color: "#3498db",
+                  cursor: "pointer",
+                }}
               >
-                {row.shortHash}
-              </Text>
-            </td>
-            <td style={{ padding: "12px 0" }}>
-              <Text fontSize="medium">{row.blockNumber}</Text>
-            </td>
-            <td style={{ padding: "12px 0" }}>
-              <Text fontSize="medium">{row.gasUsed}</Text>
-            </td>
-            <td
-              style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
-            >
-              <Text
-                fontSize="medium"
-                onClick={() => viewTheTxn(`address/${row.from}`)}
+                <Tooltip label="View on Etherscan" fontSize="sm">
+                  <Text
+                    fontSize="medium"
+                    onClick={() => viewTheTxn(`tx/${row.hash}`)}
+                  >
+                    {row.shortHash}
+                  </Text>
+                </Tooltip>
+              </td>
+              <td style={{ padding: "12px 20px 12px 0" }}>
+                <Text fontSize="medium">{row.blockNumber}</Text>
+              </td>
+              <td style={{ padding: "12px 20px 12px 0" }}>
+                <Badge ml="1" fontSize="0.8em" fontWeight={"normal"}>
+                  {row.gasPrice} ETH
+                </Badge>
+              </td>
+              <td
+                style={{
+                  padding: "12px 20px 12px 0",
+                  color: "#3498db",
+                  cursor: "pointer",
+                }}
               >
-                {row.fromShort}
-              </Text>
-            </td>
-            <td
-              style={{ padding: "12px 0", color: "#3498db", cursor: "pointer" }}
-            >
-              <Text
-                fontSize="medium"
-                onClick={() => viewTheTxn(`address/${row.to}`)}
+                <Tooltip label="View on Etherscan" fontSize="sm">
+                  <Text
+                    fontSize="medium"
+                    onClick={() => viewTheTxn(`address/${row.from}`)}
+                  >
+                    {row.fromShort}
+                  </Text>
+                </Tooltip>
+              </td>
+              <td
+                style={{
+                  padding: "12px 20px 12px 0",
+                  color: "#3498db",
+                  cursor: "pointer",
+                }}
               >
-                {row.toShort}
-              </Text>
-            </td>
-            <td style={{ padding: "12px 0" }}>
-              <Text fontSize="medium">{fromWei(row.value)} ETH</Text>
-            </td>
-            <td style={{ padding: "12px 0" }}>
-              <Text fontSize="medium">
-                {new Date(row.timeStamp * 1000).toUTCString()}
-              </Text>
-            </td>
-          </tr>
-        ))}
+                <Tooltip label="View on Etherscan" fontSize="sm">
+                  <Text
+                    fontSize="medium"
+                    onClick={() => viewTheTxn(`address/${row.to}`)}
+                  >
+                    {row.toShort}
+                  </Text>
+                </Tooltip>
+              </td>
+              <td style={{ padding: "12px 20px 12px 0" }}>
+                <Badge>{fromWei(row.value)} ETH</Badge>
+              </td>
+              <td style={{ padding: "12px 20px 12px 0" }}>
+                <Text fontSize="0.9em">{getDateStringServ(row.timeStamp)}</Text>
+              </td>
+            </tr>
+          ))}
       </table>
     </Box>
   );
